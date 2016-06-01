@@ -13,17 +13,17 @@
 ###_Simple Usage_
 - Encrypt a secret using the `vinz` bash CLI:
 
-    $> vinz encrypt TwitterSecretKey
-    Enter the secret to encrypt as 'TwitterSecretKey' (typing hidden):
-    secrets/TwitterSecretKey encrypted and saved.
+        $> vinz encrypt TwitterSecretKey
+        Enter the secret to encrypt as 'TwitterSecretKey' (typing hidden):
+        secrets/TwitterSecretKey encrypted and saved.
 
 - Decrypt a secret from node:
 
-    const vinz = require('vinz');
-    if (!vinz.isAuthenticated) {
-      vinz.authenticate();
-    }
-    console.log(vinz.get('TwitterSecretKey'))
+        const vinz = require('vinz');
+        if (!vinz.isAuthenticated) {
+          vinz.authenticate();
+        }
+        console.log(vinz.get('TwitterSecretKey'))
 
 ###_Detailed Usage_
 
