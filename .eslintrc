@@ -1,0 +1,33 @@
+{
+  "extends": "eslint-config-airbnb-base",
+  "rules":  {
+    "arrow-spacing": 2,
+    "arrow-body-style": 0,
+    "comma-dangle": [2, "never"],
+    "eqeqeq": [2, "allow-null"],
+    "func-names": 0,
+    "indent": [2, 2, {"SwitchCase": 0}],
+    "max-len": [2, 117, 2],
+    "no-alert": 2,
+    "no-console": 0,
+    "no-constant-condition": 2,
+    "no-debugger": 2,
+    "no-eq-null": 0,
+    "no-extra-strict": 0,
+    "no-undef": 2,
+    "no-unused-expressions": 0,
+    "object-curly-spacing": [2, "always"],
+    "space-in-parens": [2, "never"],
+    "strict": [2, "function"]
+  },
+  "ecmaFeatures": {
+    "modules": true,
+    "generators": true
+  },
+  "globals": {
+  },
+  "env": {
+    "node": true,
+    "es6": true
+  }
+}
