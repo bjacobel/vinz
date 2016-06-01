@@ -4,7 +4,7 @@
   "description": "Enables secure storage of credentials right in your repo using AWS KMS.",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "babel src --presets babel-preset-es2015-node4 --out-dir dist",
     "prepublish": "npm run build"
   },
@@ -31,10 +31,12 @@
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.1",
+    "babel-jest": "^12.1.0",
     "babel-preset-es2015-node4": "^2.1.0",
     "eslint": "^2.11.1",
     "eslint-config-airbnb-base": "^3.0.1",
-    "eslint-plugin-import": "^1.8.1"
+    "eslint-plugin-import": "^1.8.1",
+    "jest-cli": "^12.1.1"
   },
   "engines": {
     "node": ">=4.3.2"
