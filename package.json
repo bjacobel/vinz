@@ -1,0 +1,28 @@
+{
+  "name": "vinz",
+  "version": "0.0.1",
+  "description": "Enables secure storage of credentials right in your git repo using AWS KMS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bjacobel/vinz.git"
+  },
+  "keywords": [
+    "KMS",
+    "secrets",
+    "credentials",
+    "encrypted"
+  ],
+  "author": "Brian Jacobel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bjacobel/vinz/issues"
+  },
+  "homepage": "https://github.com/bjacobel/vinz#readme",
+  "dependencies": {
+    "aws-sdk": "^2.3.16"
+  }
+}
