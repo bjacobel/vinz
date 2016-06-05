@@ -5,7 +5,7 @@
   "main": "dist/client.js",
   "scripts": {
     "test": "jest",
-    "build": "babel src --presets babel-preset-es2015-node4 --out-dir dist",
+    "build": "babel src --out-dir dist",
     "prepublish": "npm run build"
   },
   "bin": {
@@ -33,6 +33,7 @@
     "commander": "^2.9.0"
   },
   "devDependencies": {
+    "aws-sdk-mock": "^1.2.0",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.1",
     "babel-jest": "^12.1.0",
@@ -44,5 +45,8 @@
   },
   "engines": {
     "node": ">=4.3.2"
+  },
+  "jest": {
+    "testDirectoryName": "tests"
   }
 }
