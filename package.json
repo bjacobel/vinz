@@ -2,11 +2,14 @@
   "name": "vinz",
   "version": "0.0.1",
   "description": "Enables secure storage of credentials right in your repo using AWS KMS.",
-  "main": "dist/index.js",
+  "main": "dist/client.js",
   "scripts": {
     "test": "jest",
     "build": "babel src --presets babel-preset-es2015-node4 --out-dir dist",
     "prepublish": "npm run build"
+  },
+  "bin": {
+    "vinz": "dist/cli.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +29,8 @@
   },
   "homepage": "https://github.com/bjacobel/vinz#readme",
   "dependencies": {
-    "aws-sdk": "^2.3.16"
+    "aws-sdk": "^2.3.16",
+    "commander": "^2.9.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

@@ -13,7 +13,7 @@
 ###_Simple Usage_
 - Encrypt a secret using the `vinz` bash CLI:
 
-        $> vinz encrypt TwitterSecretKey
+        $> vinz --encrypt TwitterSecretKey
         Enter the secret to encrypt as 'TwitterSecretKey' (typing hidden):
         secrets/TwitterSecretKey encrypted and saved.
 
