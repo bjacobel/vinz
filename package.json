@@ -5,7 +5,6 @@
   "main": "dist/client.js",
   "scripts": {
     "test": "jest",
-    "coverage": "jest --coverage",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "lint": "eslint .",
     "build": "babel src --out-dir dist",
