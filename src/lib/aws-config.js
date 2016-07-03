@@ -20,7 +20,7 @@ export default class AWSWithConfig {
     }
 
     if (accessKeyId && secretAccessKey) {
-      console.debug('Using AWS credentials explicitly passed');
+      console.log('Using AWS credentials explicitly passed');
 
       AWS.config.update({
         accessKeyId,
@@ -29,7 +29,7 @@ export default class AWSWithConfig {
     } else if (awsConfigExists) {
       const customProf = profile === undefined ? 'default' : profile;
 
-      console.debug(`Using ~/.aws/credentials with the [${customProf}] profile`);
+      console.log(`Using ~/.aws/credentials with the [${customProf}] profile`);
 
       const credentials = new AWS.SharedIniFileCredentials({
         profile: customProf
@@ -38,7 +38,7 @@ export default class AWSWithConfig {
       AWS.config.credentials = credentials;
     } else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
       // Don't need to do anything here, AWS.config will pick these up automatically
-      console.debug('Using AWS credentials preset in the environment');
+      console.log('Using AWS credentials preset in the environment');
     } else {
       console.error(
         'Could not find AWS credentials. See `vinz --help` ' +

@@ -32,7 +32,9 @@
   "homepage": "https://github.com/bjacobel/vinz#readme",
   "dependencies": {
     "aws-sdk": "^2.3.16",
-    "commander": "^2.9.0"
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "prompt": "^1.0.0"
   },
   "devDependencies": {
     "aws-sdk-mock": "^1.2.0",
