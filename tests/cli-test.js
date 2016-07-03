@@ -103,7 +103,7 @@ describe('cli', () => {
         properties: {
           secretValue: {
             required: true,
-            description: 'Enter the value to encrypt as FooBar. Typing will be hidden',
+            description: "Enter the secret to encrypt as 'FooBar'. (typing hidden)",
             hidden: true
           }
         }

@@ -27,13 +27,13 @@ export const encryptByCLI = (cmdr = {}) => {
     cmdr.profile
   );
 
-  prompt.message = colors.green(cmdr.encrypt);
+  prompt.message = colors.green('vinz');
   prompt.start();
   prompt.get({
     properties: {
       secretValue: {
         required: true,
-        description: `Enter the value to encrypt as ${cmdr.encrypt}. Typing will be hidden`,
+        description: `Enter the secret to encrypt as '${cmdr.encrypt}'. (typing hidden)`,
         hidden: true
       }
     }

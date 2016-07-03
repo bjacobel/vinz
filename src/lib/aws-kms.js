@@ -49,5 +49,7 @@ export const encryptAndStore = function(kmsClient, secretName, secretValue) {
       return this.encryptData(kmsClient, keyArn, secretValue);
     }).then((encryptedSecret) => {
       return writeToFile(secretName, encryptedSecret);
+    }).then(() => {
+      console.log(`secrets/${secretName} encrypted and saved.`);
     });
 };

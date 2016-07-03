@@ -93,6 +93,7 @@ describe('aws-kms', () => {
           resolve('fake encrypted data');
         });
       });
+      console.log = jest.fn();
     });
 
     it('calls encryptData after getVinzKeyArn returns', () => {

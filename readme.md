@@ -10,13 +10,13 @@
 
 
 ###_Motivation_
-`Vinz` is the keymaster of your AWS Lambda applications. Storing secrets (keys and configuration) in Lambda is difficult out of the box, given Lambda has no persistent file system and no notion of environment variables. `Vinz` aims to make the secret storage and usage process easy for Lambda functions - by storing your secrets encrypted and versioned right alongside your application in its deployment bundle, and providing a simple API for secret decryption and access.
+`Vinz` is the keymaster of your AWS Lambda applications. Storing secrets (keys and configuration) in Lambda is difficult out of the box because Lambda has no persistent file system and no notion of environment variables. `Vinz` aims to make the secret storage and usage process easy for Lambda functions - by storing your secrets encrypted and versioned right alongside your application in its deployment bundle, and providing a simple API for secret decryption and access.
 
 ###_Simple Usage_
 - Encrypt a secret using the `vinz` bash CLI:
 
         $> vinz --encrypt TwitterSecretKey
-        Enter the secret to encrypt as 'TwitterSecretKey' (typing hidden):
+        vinz: Enter the secret to encrypt as 'TwitterSecretKey'. (typing hidden):
         secrets/TwitterSecretKey encrypted and saved.
 
 - Decrypt a secret from node:
