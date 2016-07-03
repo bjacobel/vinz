@@ -1,5 +1,7 @@
 #vinz
 
+[![Build Status](https://travis-ci.org/bjacobel/vinz.svg?branch=master)](https://travis-ci.org/bjacobel/vinz)[![Coverage Status](https://coveralls.io/repos/github/bjacobel/vinz/badge.svg)](https://coveralls.io/repos/github/bjacobel/vinz)
+
 ![keymaster](https://gifs.bjacobel.com/keymaster.gif)
 
 > _I am the Keymaster!_

@@ -9,10 +9,13 @@ install:
   - npm link
   - npm install
 test:
-  - npm test
+  - npm run lint
+  - npm run coverage
+after_test:
+  - npm run coveralls
 deploy:
   provider: npm
-  api_key: $NODE_API_KEY
+  api_key: $NPM_API_KEY
   on:
     tags: true
     branch: master

@@ -1,6 +1,6 @@
 import { writeToFile } from './io';
 
-const getVinzKeyArn = (kmsClient) => {
+export const getVinzKeyArn = (kmsClient) => {
   return new Promise((resolve, reject) => {
     kmsClient.listAliases({}, (err, data) => {
       if (err) {
@@ -14,14 +14,13 @@ const getVinzKeyArn = (kmsClient) => {
   });
 };
 
-const encryptData = (keyArn, secretValue) => {
-
+export const encryptData = (keyArn, secretValue) => {
+  console.log("not mocked")
 };
 
 export const encryptAndStore = (kmsClient, secretName, secretValue) => {
   return getVinzKeyArn(kmsClient)
     .then((keyArn) => {
-      console.log(keyArn, secretValue)
       encryptData(keyArn, secretValue);
     }).then((encryptedSecret) => {
       writeToFile(encryptedSecret, secretName);
