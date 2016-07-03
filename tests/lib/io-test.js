@@ -1,7 +1,7 @@
-jest.unmock('../../src/lib/io.js');
-
 const fs = require('fs');
-const io = require('../../src/lib/io.js');
+
+jest.unmock('../../src/lib/io');
+const io = require('../../src/lib/io');
 
 describe('io', () => {
   describe('writeToFile', () => {

@@ -1,11 +1,10 @@
-jest.unmock('../src/cli');
-jest.unmock('path');
-
-const cli = require('../src/cli');
 const fs = require('fs');
 const prompt = require('prompt').default;
 const AWSWithConfig = require('../src/lib/aws-config').default;
 const { encryptAndStore } = require('../src/lib/aws-kms');
+
+jest.unmock('../src/cli');
+const cli = require('../src/cli');
 
 describe('cli', () => {
   beforeEach(() => {

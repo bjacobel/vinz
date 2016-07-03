@@ -1,7 +1,7 @@
-jest.unmock('../../src/lib/aws-config');
-
 const fs = require('fs');
 const AWS = require('aws-sdk').default;
+
+jest.unmock('../../src/lib/aws-config');
 const AWSWithConfig = require('../../src/lib/aws-config').default;
 
 const accessKeyId = 'accessKeyId';
