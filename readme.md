@@ -1,6 +1,6 @@
 #vinz
 
-[![Build Status](https://travis-ci.org/bjacobel/vinz.svg?branch=master)](https://travis-ci.org/bjacobel/vinz)[![Coverage Status](https://coveralls.io/repos/github/bjacobel/vinz/badge.svg)](https://coveralls.io/repos/github/bjacobel/vinz)
+[![Build Status](https://travis-ci.org/bjacobel/vinz.svg?branch=master)](https://travis-ci.org/bjacobel/vinz) [![Coverage Status](https://coveralls.io/repos/github/bjacobel/vinz/badge.svg)](https://coveralls.io/repos/github/bjacobel/vinz) [![npm](https://img.shields.io/npm/v/vinz.svg?maxAge=2592000)](https://npmjs.com/package/vinz)
 
 ![keymaster](https://gifs.bjacobel.com/keymaster.gif)
 
