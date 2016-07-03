@@ -1,6 +1,7 @@
 jest.unmock('../../src/lib/aws-kms');
 
 const kms = require('../../src/lib/aws-kms');
+const writeToFile = require('../../src/lib/io').writeToFile;
 
 describe('module', () => {
   let kmsClient;
@@ -67,23 +68,27 @@ describe('module', () => {
 
   describe('encryptAndStore', () => {
     beforeEach(() => {
-      kms.getVinzKeyArn = jest.fn(() => new Promise((resolve) => {
-        resolve('arn');
-      }));
-      kms.encryptData = jest.fn(() => new Promise((resolve) => {
-        resolve('encrypted');
-      }));
-    });
-
-    xit('calls encryptData after getVinzKeyArn returns', () => {
-      return kms.encryptAndStore(kmsClient, 'foo', 'bar').then(() => {
-        expect(kms.encryptData).toBeCalledWith(vinzKeyArn.AliasArn, 'bar');
+      kms.getVinzKeyArn = jest.fn(() => {
+        return new Promise((resolve) => {
+          resolve('fake arn');
+        });
+      });
+      kms.encryptData = jest.fn(() => {
+        return new Promise((resolve) => {
+          resolve('fake encrypted data');
+        });
       });
     });
 
-    xit('calls writeToFile with the results of encryptData after that returns', () => {
-      return kms.encryptAndStore(kmsClient, 'foo', 'bar').then(() => {
-        expect(kms.writeToFile).toBeCalledWith('encrypted', 'foo');
+    it('calls encryptData after getVinzKeyArn returns', () => {
+      return kms.encryptAndStore(kmsClient, 'superSecretApiKey', 'asdf1234').then(() => {
+        expect(kms.encryptData).toBeCalledWith('fake arn', 'asdf1234');
+      });
+    });
+
+    it('calls writeToFile with the results of encryptData after that returns', () => {
+      return kms.encryptAndStore(kmsClient, 'superSecretApiKey', 'asdf1234').then(() => {
+        expect(writeToFile).toBeCalledWith('superSecretApiKey', 'fake encrypted data');
       });
     });
   });

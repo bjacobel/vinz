@@ -20,14 +20,15 @@ export const getVinzKeyArn = (kmsClient) => {
 };
 
 export const encryptData = (keyArn, secretValue) => {
-  console.log("not mocked")
+
 };
 
-export const encryptAndStore = (kmsClient, secretName, secretValue) => {
-  return getVinzKeyArn(kmsClient)
+// has to use ES5 function syntax, because we have to use this, because of tests
+export const encryptAndStore = function(kmsClient, secretName, secretValue) {
+  return this.getVinzKeyArn(kmsClient)
     .then((keyArn) => {
-      encryptData(keyArn, secretValue);
+      return this.encryptData(keyArn, secretValue);
     }).then((encryptedSecret) => {
-      writeToFile(encryptedSecret, secretName);
+      return writeToFile(secretName, encryptedSecret);
     });
 };
