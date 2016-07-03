@@ -52,7 +52,7 @@
     "node": "4.3.2"
   },
   "jest": {
-    "testRegex": "tests/.*.js$",
+    "testRegex": "tests/.*-test.js$",
     "mocksPattern": "(?:[\\/]|^)mocks[\\/]",
     "collectCoverage": true
   }
