@@ -40,13 +40,13 @@ export default class AWSWithConfig {
       // Don't need to do anything here, AWS.config will pick these up automatically
       console.log('Using AWS credentials preset in the environment');
     } else {
-      console.error(
+      throw new Error(
         'Could not find AWS credentials. See `vinz --help` ' +
         'for more info on your options for specifying credentials.'
       );
-      process.exit(1);
     }
 
     this.KMS = new AWS.KMS();
+    this.credentials = AWS.config.credentials;
   }
 }
