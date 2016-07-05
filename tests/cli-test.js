@@ -13,6 +13,7 @@ describe('cli', () => {
       mkdir: jest.fn()
     });
   });
+
   describe('startCLI', () => {
     it('starts up a Commander interface', () => {
 
