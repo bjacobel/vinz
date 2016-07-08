@@ -1,11 +1,11 @@
-const fs = require('fs');
-const prompt = require('prompt').default;
-const commander = require('commander').default;
-const AWSWithConfig = require('../src/lib/aws-config').default;
-const { encryptAndStore } = require('../src/lib/aws-kms');
+import fs from 'fs';
+import prompt from 'prompt';
+import commander from 'commander';
+import AWSWithConfig from '../src/lib/aws-config';
+import { encryptAndStore } from '../src/lib/aws-kms';
 
 jest.unmock('../src/cli');
-const cli = require('../src/cli');
+import * as cli from '../src/cli';
 
 describe('cli', () => {
   beforeEach(() => {

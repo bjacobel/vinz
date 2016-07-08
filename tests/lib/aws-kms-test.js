@@ -1,7 +1,7 @@
-const io = require('../../src/lib/io');
+import { writeToFile } from '../../src/lib/io';
 
 jest.unmock('../../src/lib/aws-kms');
-const kms = require('../../src/lib/aws-kms');
+import * as kms from '../../src/lib/aws-kms';
 
 describe('aws-kms', () => {
   let kmsClient;
@@ -104,7 +104,7 @@ describe('aws-kms', () => {
 
     it('calls writeToFile with the results of encryptData after that returns', () => {
       return kms.encryptAndStore(kmsClient, 'superSecretApiKey', 'asdf1234').then(() => {
-        expect(io.writeToFile).toBeCalledWith('superSecretApiKey', 'fake encrypted data');
+        expect(writeToFile).toBeCalledWith('superSecretApiKey', 'fake encrypted data');
       });
     });
   });

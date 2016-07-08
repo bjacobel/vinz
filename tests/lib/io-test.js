@@ -1,7 +1,7 @@
-const fs = require('fs');
+import fs from 'fs';
 
 jest.unmock('../../src/lib/io');
-const io = require('../../src/lib/io');
+import * as io from '../../src/lib/io';
 
 describe('io', () => {
   describe('writeToFile', () => {

@@ -37,7 +37,6 @@
     "prompt": "^1.0.0"
   },
   "devDependencies": {
-    "aws-sdk-mock": "^1.2.0",
     "babel-cli": "^6.9.0",
     "babel-core": "^6.9.1",
     "babel-jest": "^12.1.0",

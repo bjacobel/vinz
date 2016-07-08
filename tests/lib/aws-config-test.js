@@ -1,8 +1,8 @@
-const fs = require('fs');
-const AWS = require('aws-sdk').default;
+import fs from 'fs';
+import AWS from 'aws-sdk';
 
 jest.unmock('../../src/lib/aws-config');
-const AWSWithConfig = require('../../src/lib/aws-config').default;
+import AWSWithConfig from '../../src/lib/aws-config';
 
 const accessKeyId = 'accessKeyId';
 const secretAccessKey = 'secretAccessKey';
