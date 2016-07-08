@@ -5,9 +5,9 @@ import AWSWithConfig from '../src/lib/aws-config';
 import { encryptAndStore } from '../src/lib/aws-kms';
 
 jest.unmock('../src/cli');
-import * as cli from '../src/cli';
+import CLI from '../src/cli';
 
-describe('cli', () => {
+describe('CLI', () => {
   beforeEach(() => {
     Object.assign(fs, {
       statSync: jest.fn(() => true),
@@ -15,13 +15,14 @@ describe('cli', () => {
     });
   });
 
-  describe('startCLI', () => {
+  describe('constructor', () => {
     it('starts up a Commander interface', () => {
       spyOn(console, 'error');
 
       process.argv = ['foo', 'bar'];
 
-      cli.startCLI();
+      const cli = new CLI();
+      cli.parse();
 
       expect(commander.version).toBeCalled();
 
@@ -36,7 +37,8 @@ describe('cli', () => {
     it('displays an error if nothing is set', () => {
       console.error = jest.fn();
 
-      cli.startCLI();
+      const cli = new CLI();
+      cli.parse();
 
       expect(console.error).toBeCalled();
       expect(console.error.mock.calls[0]).toMatch('No arguments passed.');
@@ -45,9 +47,9 @@ describe('cli', () => {
     it('calls encryptByCLI if commander.encrypt is set', () => {
       commander.encrypt = true;
 
+      const cli = new CLI();
       spyOn(cli, 'encryptByCLI');
-
-      cli.startCLI();
+      cli.parse();
 
       expect(cli.encryptByCLI).toBeCalled();
     });
@@ -57,8 +59,9 @@ describe('cli', () => {
       commander.secretAccessKey = 'bizz';
       commander.encrypt = true;
 
+      const cli = new CLI();
       spyOn(cli, 'encryptByCLI');
-      cli.startCLI();
+      cli.parse();
 
       expect(cli.encryptByCLI).toBeCalledWith(jasmine.objectContaining({
         accessKeyId: 'bar',
@@ -69,6 +72,7 @@ describe('cli', () => {
 
   describe('encryptByCLI', () => {
     it('calls prepSecretDir', () => {
+      const cli = new CLI();
       spyOn(cli, 'prepSecretDir');
       cli.encryptByCLI();
       expect(cli.prepSecretDir).toBeCalled();
@@ -83,11 +87,13 @@ describe('cli', () => {
         secretAccessKey,
         profile
       };
+      const cli = new CLI();
       cli.encryptByCLI(params);
       expect(AWSWithConfig).toBeCalledWith(accessKeyId, secretAccessKey, profile);
     });
 
     it('prompts for secret value', () => {
+      const cli = new CLI();
       cli.encryptByCLI({ encrypt: 'FooBar' });
       expect(prompt.get).lastCalledWith({
         properties: {
@@ -101,6 +107,7 @@ describe('cli', () => {
     });
 
     it('calls encryptAndStore after the prompt gets input', () => {
+      const cli = new CLI();
       cli.encryptByCLI({ encrypt: 'FooBar' });
       expect(encryptAndStore).toBeCalledWith(undefined, 'FooBar', 'secretValue');
     });
@@ -109,6 +116,7 @@ describe('cli', () => {
       prompt.get = jest.fn((params, cb) => {
         cb('error from prompt');
       });
+      const cli = new CLI();
       expect(() => cli.encryptByCLI()).toThrow(new Error('error from prompt'));
     });
   });
@@ -116,11 +124,13 @@ describe('cli', () => {
   describe('prepSecretDir', () => {
     it("creates a ./secret dir if one doesn't exist", () => {
       fs.statSync = jest.fn(() => { throw new Error(); });
+      const cli = new CLI();
       cli.prepSecretDir();
       expect(fs.mkdir).toBeCalled();
     });
 
     it('does nothing if ./secret exists', () => {
+      const cli = new CLI();
       cli.prepSecretDir();
       expect(fs.mkdir).not.toBeCalled();
     });
