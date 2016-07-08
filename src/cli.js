@@ -18,8 +18,8 @@ export const prepSecretDir = () => {
   }
 };
 
-export const encryptByCLI = (cmdr = {}) => {
-  prepSecretDir();
+export const encryptByCLI = function(cmdr = {}) {
+  this.prepSecretDir();
 
   const AWS = new AWSWithConfig(
     cmdr.accessKeyId,
@@ -46,7 +46,7 @@ export const encryptByCLI = (cmdr = {}) => {
   });
 };
 
-export const startCLI = () => {
+export const startCLI = function() {
   commander
     .version(version)
     .option(
@@ -72,7 +72,7 @@ export const startCLI = () => {
     .parse(process.argv);
 
   if (commander.encrypt) {
-    encryptByCLI(commander);
+    this.encryptByCLI(commander);
   } else {
     console.error(
       'No arguments passed. You probably wanted `vinz --encrypt`.\n' +

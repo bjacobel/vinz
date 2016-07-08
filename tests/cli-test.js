@@ -1,5 +1,6 @@
 const fs = require('fs');
 const prompt = require('prompt').default;
+const commander = require('commander').default;
 const AWSWithConfig = require('../src/lib/aws-config').default;
 const { encryptAndStore } = require('../src/lib/aws-kms');
 
@@ -16,72 +17,61 @@ describe('cli', () => {
 
   describe('startCLI', () => {
     it('starts up a Commander interface', () => {
+      spyOn(console, 'error');
 
+      process.argv = ['foo', 'bar'];
+
+      cli.startCLI();
+
+      expect(commander.version).toBeCalled();
+
+      expect(commander.option.mock.calls.length).toBe(4);
+      ['-p', '-a', '-s', '-e'].forEach((option, i) => {
+        expect(commander.option.mock.calls[i]).toMatch(option);
+      });
+
+      expect(commander.parse).toBeCalledWith(['foo', 'bar']);
     });
 
     it('displays an error if nothing is set', () => {
+      console.error = jest.fn();
 
+      cli.startCLI();
+
+      expect(console.error).toBeCalled();
+      expect(console.error.mock.calls[0]).toMatch('No arguments passed.');
     });
 
     it('calls encryptByCLI if commander.encrypt is set', () => {
+      commander.encrypt = true;
 
+      spyOn(cli, 'encryptByCLI');
+
+      cli.startCLI();
+
+      expect(cli.encryptByCLI).toBeCalled();
     });
 
     it('passes secret keys to encryptByCLI if provided', () => {
+      commander.accessKeyId = 'bar';
+      commander.secretAccessKey = 'bizz';
+      commander.encrypt = true;
 
-    });
+      spyOn(cli, 'encryptByCLI');
+      cli.startCLI();
 
-    describe('parameter validation', () => {
-      describe('profile', () => {
-        it("can't be null", () => {
-        });
-
-        it('passes regex when well-formed', () => {
-        });
-
-        it('triggers regex failure when poorly formed', () => {
-        });
-      });
-
-      describe('accessKeyId', () => {
-        it("can't be null", () => {
-        });
-
-        it('passes regex when well-formed', () => {
-        });
-
-        it('triggers regex failure when poorly formed', () => {
-        });
-      });
-
-      describe('secretAccessKey', () => {
-        it("can't be null", () => {
-        });
-
-        it('passes regex when well-formed', () => {
-        });
-
-        it('triggers regex failure when poorly formed', () => {
-        });
-      });
-
-      describe('secretName', () => {
-        it("can't be null", () => {
-        });
-
-        it('passes regex when well-formed', () => {
-        });
-
-        it('triggers regex failure when poorly formed', () => {
-        });
-      });
+      expect(cli.encryptByCLI).toBeCalledWith(jasmine.objectContaining({
+        accessKeyId: 'bar',
+        secretAccessKey: 'bizz'
+      }));
     });
   });
 
   describe('encryptByCLI', () => {
     it('calls prepSecretDir', () => {
+      spyOn(cli, 'prepSecretDir');
       cli.encryptByCLI();
-      expect(fs.statSync).toBeCalled();
+      expect(cli.prepSecretDir).toBeCalled();
     });
 
     it('creates a new AWSWithConfig', () => {
@@ -119,7 +109,7 @@ describe('cli', () => {
       prompt.get = jest.fn((params, cb) => {
         cb('error from prompt');
       });
-      expect(cli.encryptByCLI).toThrow(new Error('error from prompt'));
+      expect(() => cli.encryptByCLI()).toThrow(new Error('error from prompt'));
     });
   });
 

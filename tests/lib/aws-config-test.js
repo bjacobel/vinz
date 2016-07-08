@@ -18,7 +18,7 @@ const configExpectations = (config) => {
 describe('aws-config', () => {
   describe('AWSWithConfig', () => {
     beforeEach(() => {
-      console.log = jest.fn();
+      spyOn(console, 'log');
     });
 
     afterEach(() => {
