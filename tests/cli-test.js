@@ -1,7 +1,7 @@
 import prompt from 'prompt';
 import commander from 'commander';
 import AWSWithConfig from '../src/lib/aws-config';
-import KMS from '../src/lib/aws-kms';
+import kms from '../src/lib/aws-kms';
 import { prepSecretDir } from '../src/lib/io';
 
 jest.unmock('../src/cli');
@@ -29,7 +29,7 @@ describe('CLI', () => {
         expect(commander.option.mock.calls[i]).toMatch(option);
       });
 
-      expect(commander.parse).toBeCalledWith(['foo', 'bar']);
+      expect(commander.parse).lastCalledWith(['foo', 'bar']);
     });
 
     it('displays an error if nothing is set', () => {
@@ -58,7 +58,7 @@ describe('CLI', () => {
       spyOn(cli, 'encryptByCLI');
       cli.parse();
 
-      expect(cli.encryptByCLI).toBeCalledWith(jasmine.objectContaining({
+      expect(cli.encryptByCLI).lastCalledWith(jasmine.objectContaining({
         accessKeyId: 'bar',
         secretAccessKey: 'bizz'
       }));
@@ -81,7 +81,7 @@ describe('CLI', () => {
         profile
       };
       cli.encryptByCLI(params);
-      expect(AWSWithConfig).toBeCalledWith(accessKeyId, secretAccessKey, profile);
+      expect(AWSWithConfig).lastCalledWith(accessKeyId, secretAccessKey, profile);
     });
 
     it('prompts for secret value', () => {
@@ -98,9 +98,8 @@ describe('CLI', () => {
     });
 
     it('calls encryptAndStore after the prompt gets input', () => {
-      const kms = new KMS();
       cli.encryptByCLI({ encrypt: 'FooBar' });
-      expect(kms.encryptAndStore).toBeCalledWith(undefined, 'FooBar', 'secretValue');
+      expect(kms.encryptAndStore).lastCalledWith(undefined, 'FooBar', 'secretValue');
     });
 
     it('throws any error from prompt', () => {

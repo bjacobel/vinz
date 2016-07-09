@@ -30,21 +30,21 @@ describe('aws-config', () => {
     it('can be instantiated by passing in access and secret keys', () => {
       fs.statSync.mockImplementationOnce(() => { throw Error(); });
       const aws = new AWSWithConfig(accessKeyId, secretAccessKey);
-      expect(console.log).toBeCalledWith('Using AWS credentials explicitly passed');
+      expect(console.log).lastCalledWith('Using AWS credentials explicitly passed');
       configExpectations(aws);
     });
 
     it('can be instantiated by passing in a profile', () => {
       const aws = new AWSWithConfig(null, null, 'asdf');
       expect(AWS.SharedIniFileCredentials).toBeCalledWith({ profile: 'asdf' });
-      expect(console.log).toBeCalledWith('Using ~/.aws/credentials with the [asdf] profile');
+      expect(console.log).lastCalledWith('Using ~/.aws/credentials with the [asdf] profile');
       configExpectations(aws);
     });
 
     it('can be instantiated if a default profile exists', () => {
       const aws = new AWSWithConfig();
       expect(AWS.SharedIniFileCredentials).toBeCalledWith({ profile: 'default' });
-      expect(console.log).toBeCalledWith('Using ~/.aws/credentials with the [default] profile');
+      expect(console.log).lastCalledWith('Using ~/.aws/credentials with the [default] profile');
       configExpectations(aws);
     });
 
@@ -55,12 +55,12 @@ describe('aws-config', () => {
         AWS_SECRET_ACCESS_KEY: secretAccessKey
       });
       const aws = new AWSWithConfig();
-      expect(console.log).toBeCalledWith('Using AWS credentials preset in the environment');
+      expect(console.log).lastCalledWith('Using AWS credentials preset in the environment');
       configExpectations(aws);
     });
 
     it('throws an error if none of the above work', () => {
-      fs.statSync = jest.fn(() => { throw Error(); });
+      fs.statSync.mockImplementationOnce(() => { throw Error(); });
       expect(() => new AWSWithConfig()).toThrow(new Error(
         'Could not find AWS credentials. See `vinz --help` ' +
         'for more info on your options for specifying credentials.'

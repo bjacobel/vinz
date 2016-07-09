@@ -5,7 +5,7 @@ import prompt from 'prompt';
 import colors from 'colors';
 
 import AWSWithConfig from './lib/aws-config';
-import KMS from './lib/aws-kms';
+import kms from './lib/aws-kms';
 import { version } from '../package.json';
 import { prepSecretDir } from './lib/io';
 
@@ -68,7 +68,6 @@ export default class CLI {
       if (err) {
         throw new Error(err);
       } else {
-        const kms = new KMS();
         kms.encryptAndStore(AWS.KMS, cmdr.encrypt, result.secretValue);
       }
     });

@@ -1,10 +1,9 @@
 import { writeToFile } from '../../src/lib/io';
 
 jest.unmock('../../src/lib/aws-kms');
-import KMS from '../../src/lib/aws-kms';
+import kms from '../../src/lib/aws-kms';
 
 describe('aws-kms', () => {
-  let kms;
   let kmsClient;
   const notVinzKeyArn = {
     AliasName: 'not vinz',
@@ -18,7 +17,6 @@ describe('aws-kms', () => {
   };
 
   beforeEach(() => {
-    kms = new KMS();
     kmsClient = {
       listAliases: jest.fn((opts, callback) => {
         callback(null, {
@@ -100,13 +98,13 @@ describe('aws-kms', () => {
 
     it('calls encryptData after getVinzKeyArn returns', () => {
       return kms.encryptAndStore(kmsClient, 'superSecretApiKey', 'asdf1234').then(() => {
-        expect(kms.encryptData).toBeCalledWith(kmsClient, 'fake arn', 'asdf1234');
+        expect(kms.encryptData).lastCalledWith(kmsClient, 'fake arn', 'asdf1234');
       });
     });
 
     it('calls writeToFile with the results of encryptData after that returns', () => {
       return kms.encryptAndStore(kmsClient, 'superSecretApiKey', 'asdf1234').then(() => {
-        expect(writeToFile).toBeCalledWith('superSecretApiKey', 'fake encrypted data');
+        expect(writeToFile).lastCalledWith('superSecretApiKey', 'fake encrypted data');
       });
     });
   });
