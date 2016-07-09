@@ -3,12 +3,11 @@
 import commander from 'commander';
 import prompt from 'prompt';
 import colors from 'colors';
-import path from 'path';
-import fs from 'fs';
 
 import AWSWithConfig from './lib/aws-config';
-import { encryptAndStore } from './lib/aws-kms';
+import KMS from './lib/aws-kms';
 import { version } from '../package.json';
+import { prepSecretDir } from './lib/io';
 
 export default class CLI {
   parse() {
@@ -46,17 +45,8 @@ export default class CLI {
     }
   }
 
-  prepSecretDir() {
-    const secretsDir = path.join(process.cwd(), 'secrets');
-    try {
-      fs.statSync(secretsDir);
-    } catch (e) {
-      fs.mkdir(secretsDir);
-    }
-  }
-
   encryptByCLI(cmdr = {}) {
-    this.prepSecretDir();
+    prepSecretDir();
 
     const AWS = new AWSWithConfig(
       cmdr.accessKeyId,
@@ -78,7 +68,8 @@ export default class CLI {
       if (err) {
         throw new Error(err);
       } else {
-        encryptAndStore(AWS.KMS, cmdr.encrypt, result.secretValue);
+        const kms = new KMS();
+        kms.encryptAndStore(AWS.KMS, cmdr.encrypt, result.secretValue);
       }
     });
   }

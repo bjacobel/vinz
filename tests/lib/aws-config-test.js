@@ -1,3 +1,4 @@
+jest.mock('fs');
 import fs from 'fs';
 import AWS from 'aws-sdk';
 
@@ -27,14 +28,13 @@ describe('aws-config', () => {
     });
 
     it('can be instantiated by passing in access and secret keys', () => {
-      fs.statSync = jest.fn(() => { throw Error(); });
+      fs.statSync.mockImplementationOnce(() => { throw Error(); });
       const aws = new AWSWithConfig(accessKeyId, secretAccessKey);
       expect(console.log).toBeCalledWith('Using AWS credentials explicitly passed');
       configExpectations(aws);
     });
 
     it('can be instantiated by passing in a profile', () => {
-      fs.statSync = jest.fn(() => true);
       const aws = new AWSWithConfig(null, null, 'asdf');
       expect(AWS.SharedIniFileCredentials).toBeCalledWith({ profile: 'asdf' });
       expect(console.log).toBeCalledWith('Using ~/.aws/credentials with the [asdf] profile');
@@ -42,7 +42,6 @@ describe('aws-config', () => {
     });
 
     it('can be instantiated if a default profile exists', () => {
-      fs.statSync = jest.fn(() => true);
       const aws = new AWSWithConfig();
       expect(AWS.SharedIniFileCredentials).toBeCalledWith({ profile: 'default' });
       expect(console.log).toBeCalledWith('Using ~/.aws/credentials with the [default] profile');
@@ -50,7 +49,7 @@ describe('aws-config', () => {
     });
 
     it('can be instantiated if env vars are set', () => {
-      fs.statSync = jest.fn(() => { throw Error(); });
+      fs.statSync.mockImplementationOnce(() => { throw Error(); });
       Object.assign(process.env, {
         AWS_ACCESS_KEY_ID: accessKeyId,
         AWS_SECRET_ACCESS_KEY: secretAccessKey

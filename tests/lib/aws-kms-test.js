@@ -1,9 +1,10 @@
 import { writeToFile } from '../../src/lib/io';
 
 jest.unmock('../../src/lib/aws-kms');
-import * as kms from '../../src/lib/aws-kms';
+import KMS from '../../src/lib/aws-kms';
 
 describe('aws-kms', () => {
+  let kms;
   let kmsClient;
   const notVinzKeyArn = {
     AliasName: 'not vinz',
@@ -17,6 +18,7 @@ describe('aws-kms', () => {
   };
 
   beforeEach(() => {
+    kms = new KMS();
     kmsClient = {
       listAliases: jest.fn((opts, callback) => {
         callback(null, {
@@ -57,7 +59,7 @@ describe('aws-kms', () => {
 
     it('returns a failing promise when listAliases has an error', () => {
       const errMsg = 'listAliases error';
-      kmsClient.listAliases = jest.fn((opts, callback) => {
+      kmsClient.listAliases.mockImplementationOnce((opts, callback) => {
         callback(errMsg);
       });
       return kms.getVinzKeyArn(kmsClient).catch((err) => {
@@ -74,7 +76,7 @@ describe('aws-kms', () => {
     });
 
     it('resolves with error when kmsclient has an error', () => {
-      kmsClient.encrypt = jest.fn((opts, callback) => { callback('oops'); });
+      kmsClient.encrypt.mockImplementationOnce((opts, callback) => { callback('oops'); });
       return kms.encryptData(kmsClient, 'arn', 'encrypt me').catch((err) => {
         expect(err).toEqual('oops');
       });
