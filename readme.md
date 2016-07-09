@@ -87,7 +87,7 @@ Vinz will now ask you to enter the value you'd like to encrypt. Typing will be h
 
 	vinz: Enter the secret to encrypt as 'TwitterConsumerKey'. (typing hidden):
 
-Type your secret, press enter, and Vinz will encrypt your secret usjign AWS KMS and save it at `./secrets/TwitterConsumerKey`. Commit your encrypted secret file to Git and/or include it in your Lambda deployment bundle, and you're ready to start using it in a Node application.
+Type your secret, press enter, and Vinz will encrypt your secret using AWS KMS and save it at `./secrets/TwitterConsumerKey`. Commit your encrypted secret file to Git and/or include it in your Lambda deployment bundle, and you're ready to start using it in a Node application.
 
 #### 4. Use your secrets in Node
 TBD
