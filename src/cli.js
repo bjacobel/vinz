@@ -74,6 +74,7 @@ export default class CLI {
   }
 }
 
+/* istanbul ignore next */
 if (require.main === module) {
   const cli = new CLI();
   cli.parse();
