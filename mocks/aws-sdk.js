@@ -3,7 +3,7 @@ const config = {
 };
 
 config.update = jest.fn((params) => {
-  config.credentials = params;
+  config.credentials = Object.assign({}, config.credentials, params);
 });
 
 const AWS = {

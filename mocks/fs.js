@@ -1,7 +1,8 @@
 export default {
-  statSync: jest.fn(() => true),
+  statSync: jest.fn(),
   mkdir: jest.fn(),
   writeFile: jest.fn((file, data, callback) => {
     callback();
-  })
+  }),
+  readFileSync: jest.fn()
 };

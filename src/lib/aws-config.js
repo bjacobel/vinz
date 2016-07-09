@@ -1,52 +1,71 @@
 import AWS from 'aws-sdk';
 import path from 'path';
 import fs from 'fs';
+import ini from 'ini';
 
 export default class AWSWithConfig {
-  constructor(accessKeyId, secretAccessKey, profile) {
+  constructor(accessKeyId, secretAccessKey, region, profile) {
     /* Four different kinds of auth can be done, try them in this order:
-       - Passed in explicitly (using commander.accessKeyId and commander.secretAccessKey)
-       - ~/.aws/credentials (using commander.profile)
-       - ~/.aws/credentials (using the default profile)
-       - env variables (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)
+       - Passed in explicitly (using commander.region, commander.accessKeyId and commander.secretAccessKey)
+       - ~/.aws/credentials and ~/.aws/config (using commander.profile)
+       - ~/.aws/credentials and ~/.aws/config (using the default profile)
+       - env variables (AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)
     */
-    let awsConfigExists = false;
 
-    try {
-      fs.statSync(path.join(process.env.HOME, '.aws/credentials'));
-      awsConfigExists = true;
-    } catch (e) {
-      // Don't do anything, we'll fall through to a different auth option below
-    }
+    const configExists = this.checkAWSConfigFilesExistence();
 
-    if (accessKeyId && secretAccessKey) {
-      console.log('Using AWS credentials explicitly passed');
+    if (accessKeyId && secretAccessKey && region) {
+      console.log('Using AWS config and credentials explicitly passed');
 
       AWS.config.update({
         accessKeyId,
-        secretAccessKey
+        secretAccessKey,
+        region
       });
-    } else if (awsConfigExists) {
+    } else if (configExists) {
       const customProf = profile === undefined ? 'default' : profile;
 
-      console.log(`Using ~/.aws/credentials with the [${customProf}] profile`);
+      console.log(`Using ~/.aws/config and ~/.aws/credentials with the [${customProf}] profile`);
 
       const credentials = new AWS.SharedIniFileCredentials({
         profile: customProf
       });
 
       AWS.config.credentials = credentials;
-    } else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+      AWS.config.update({
+        region: this.getRegion(customProf)
+      });
+    } else if (this.checkProcessEnv()) {
       // Don't need to do anything here, AWS.config will pick these up automatically
-      console.log('Using AWS credentials preset in the environment');
+      console.log('Using AWS config and credentials preset in environment variables');
     } else {
       throw new Error(
-        'Could not find AWS credentials. See `vinz --help` ' +
+        'Could not find AWS config and/or credentials. See `vinz --help` ' +
         'for more info on your options for specifying credentials.'
       );
     }
 
     this.KMS = new AWS.KMS();
     this.credentials = AWS.config.credentials;
+  }
+
+  checkAWSConfigFilesExistence() {
+    try {
+      fs.statSync(path.join(process.env.HOME, '.aws/config'));
+      fs.statSync(path.join(process.env.HOME, '.aws/credentials'));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  checkProcessEnv() {
+    return process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_DEFAULT_REGION;
+  }
+
+  getRegion(profile) {
+    const file = fs.readFileSync(path.join(process.env.HOME, '.aws/config'), 'utf-8');
+    const parsedIni = ini.parse(file);
+    return parsedIni[profile].region;
   }
 }

@@ -24,8 +24,10 @@ describe('CLI', () => {
 
       expect(commander.version).toBeCalled();
 
-      expect(commander.option.mock.calls.length).toBe(4);
-      ['-p', '-a', '-s', '-e'].forEach((option, i) => {
+      const options = ['-p', '-a', '-s', '-r', '-e'];
+
+      expect(commander.option.mock.calls.length).toBe(options.length);
+      options.forEach((option, i) => {
         expect(commander.option.mock.calls[i]).toMatch(option);
       });
 
@@ -53,6 +55,7 @@ describe('CLI', () => {
     it('passes secret keys to encryptByCLI if provided', () => {
       commander.accessKeyId = 'bar';
       commander.secretAccessKey = 'bizz';
+      commander.region = 'us-east-1';
       commander.encrypt = true;
 
       spyOn(cli, 'encryptByCLI');
@@ -60,7 +63,8 @@ describe('CLI', () => {
 
       expect(cli.encryptByCLI).lastCalledWith(jasmine.objectContaining({
         accessKeyId: 'bar',
-        secretAccessKey: 'bizz'
+        secretAccessKey: 'bizz',
+        region: 'us-east-1'
       }));
     });
   });
@@ -74,14 +78,16 @@ describe('CLI', () => {
     it('creates a new AWSWithConfig', () => {
       const accessKeyId = 'accessKeyId';
       const secretAccessKey = 'secretAccessKey';
+      const region = 'us-east-1';
       const profile = 'profile';
       const params = {
         accessKeyId,
         secretAccessKey,
+        region,
         profile
       };
       cli.encryptByCLI(params);
-      expect(AWSWithConfig).lastCalledWith(accessKeyId, secretAccessKey, profile);
+      expect(AWSWithConfig).lastCalledWith(accessKeyId, secretAccessKey, region, profile);
     });
 
     it('prompts for secret value', () => {

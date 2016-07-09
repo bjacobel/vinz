@@ -29,6 +29,11 @@ export default class CLI {
         /^([A-Za-z0-9\\]+)$/
       )
       .option(
+        '-r, --region <region>',
+        'Override AWS service region found in env or in ~/.aws',
+        /^[a-z]{2}-[a-z]{4,9}-[1-2]$/
+      )
+      .option(
         '-e, --encrypt <secretName>',
         'Store an encrypted secret in ./secrets/secretName',
         /^([^\0\/]+)$/i
@@ -51,6 +56,7 @@ export default class CLI {
     const AWS = new AWSWithConfig(
       cmdr.accessKeyId,
       cmdr.secretAccessKey,
+      cmdr.region,
       cmdr.profile
     );
 
