@@ -11,7 +11,7 @@ const getVinzKeyArn = (kmsClient) => {
       }
     });
   }).then((data) => {
-    const vinzKey = data.Aliases.filter(x => x.AliasName === 'vinz');
+    const vinzKey = data.Aliases.filter(x => x.AliasName === 'alias/vinz');
     if (vinzKey.length === 0) {
       throw new Error('No KMS key named "vinz". For more info on setup. see the readme.');
     } else {

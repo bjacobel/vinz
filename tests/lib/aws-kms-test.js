@@ -6,12 +6,12 @@ import kms from '../../src/lib/aws-kms';
 describe('aws-kms', () => {
   let kmsClient;
   const notVinzKeyArn = {
-    AliasName: 'not vinz',
+    AliasName: 'alias/not-vinz',
     AliasArn: '1234',
     TargetKeyId: 'abcde'
   };
   const vinzKeyArn = {
-    AliasName: 'vinz',
+    AliasName: 'alias/vinz',
     AliasArn: '5678',
     TargetKeyId: 'fghjk'
   };
