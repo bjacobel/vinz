@@ -44,6 +44,22 @@ const encryptData = (kmsClient, keyArn, secretValue) => {
   });
 };
 
+const decryptData = (kmsClient, keyArn, buffer) => {
+  return new Promise((resolve, reject) => {
+    kmsClient.decrypt({
+      KeyId: keyArn,
+      Ciphertext: buffer,
+      EncryptionContext: ENCRYPTION_CONTEXT
+    }, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
 const encryptAndStore = function(kmsClient, secretName, secretValue) {
   return this.getVinzKeyArn(kmsClient)
     .then((keyArn) => {
@@ -55,10 +71,6 @@ const encryptAndStore = function(kmsClient, secretName, secretValue) {
     }).catch((err) => {
       console.error(err);
     });
-};
-
-const decryptData = (kmsClient, keyArn, buffer) => {
-  return buffer;
 };
 
 const retrieveAndDecrypt = function(kmsClient, secretName) {

@@ -31,6 +31,9 @@ describe('aws-kms', () => {
           CiphertextBlob: 'encrypted secret',
           KeyId: vinzKeyArn.aliasArn
         });
+      }),
+      decrypt: jest.fn((opts, callback) => {
+        callback(null, opts.Ciphertext.substring(0, opts.Ciphertext.length - 9));
       })
     };
   });
@@ -81,6 +84,23 @@ describe('aws-kms', () => {
     });
   });
 
+  describe('decryptData', () => {
+    it("runs input data through KMS's decrypt method", () => {
+      return kms.decryptData(kmsClient, 'arn', 'bufferedDataEncrypted').then((data) => {
+        expect(data).toEqual('bufferedData');
+      });
+    });
+
+    it('raises any error from KMS itself', () => {
+      kmsClient.decrypt.mockImplementationOnce((opts, callback) => {
+        callback('decryption error');
+      });
+      return kms.decryptData(kmsClient, 'arn', 'bufferedDataEncrypted').catch((err) => {
+        expect(err).toEqual('decryption error');
+      });
+    });
+  });
+
   describe('encryptAndStore', () => {
     beforeEach(() => {
       kms.getVinzKeyArn = jest.fn(() => {
@@ -106,16 +126,6 @@ describe('aws-kms', () => {
       return kms.encryptAndStore(kmsClient, 'superSecretApiKey', 'asdf1234').then(() => {
         expect(writeToFile).lastCalledWith('superSecretApiKey', 'fake encrypted data');
       });
-    });
-  });
-
-  describe('decryptData', () => {
-    it("runs input data through KMS's decrypt method", () => {
-      expect(true).not.toBeTruthy();
-    });
-
-    it('raises any error from KMS itself', () => {
-      expect(true).not.toBeTruthy();
     });
   });
 

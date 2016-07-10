@@ -1,6 +1,8 @@
 jest.mock('fs');
 import fs from 'fs';
 
+import { SECRET_DIR_NAME } from '../../src/constants';
+
 jest.unmock('../../src/lib/io');
 import * as io from '../../src/lib/io';
 
@@ -43,11 +45,29 @@ describe('io', () => {
 
   describe('readFromFile', () => {
     it('retrieves the contents of the file at ./secrets/args[0]', () => {
-      expect(true).not.toBeTruthy();
+      return io.readFromFile('FooBar').then((data) => {
+        expect(fs.readFile).lastCalledWith(
+          `./${SECRET_DIR_NAME}/FooBar`,
+          { encoding: 'utf-8' },
+          jasmine.any(Function)
+        );
+        expect(data).toEqual('FooBarEncrypted');
+      });
     });
 
     it('handles errors gracefully', () => {
-      expect(true).not.toBeTruthy();
+      fs.readFile.mockImplementationOnce((file, opts, cb) => {
+        cb('error from readFile');
+      });
+
+      return io.readFromFile('FooBar').catch((err) => {
+        expect(fs.readFile).lastCalledWith(
+          `./${SECRET_DIR_NAME}/FooBar`,
+          { encoding: 'utf-8' },
+          jasmine.any(Function)
+        );
+        expect(err).toEqual('error from readFile');
+      });
     });
   });
 });

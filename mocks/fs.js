@@ -4,5 +4,8 @@ export default {
   writeFile: jest.fn((file, data, callback) => {
     callback();
   }),
-  readFileSync: jest.fn()
+  readFileSync: jest.fn(),
+  readFile: jest.fn((file, opts, cb) => {
+    cb(null, 'FooBarEncrypted');
+  })
 };
