@@ -5,17 +5,19 @@ import ini from 'ini';
 
 export default class AWSWithConfig {
   constructor(accessKeyId, secretAccessKey, region, profile) {
-    /* Four different kinds of auth can be done, try them in this order:
+    /* Five different kinds of auth can be done, try them in this order:
        - Passed in explicitly (using commander.region, commander.accessKeyId and commander.secretAccessKey)
        - ~/.aws/credentials and ~/.aws/config (using commander.profile)
        - ~/.aws/credentials and ~/.aws/config (using the default profile)
        - env variables (AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)
+       - On Lambda (EC2), auth should Just Work™ (due to preprovisioned IAM roles)
     */
 
     const configExists = this.checkAWSConfigFilesExistence();
+    let authMethod;
 
     if (accessKeyId && secretAccessKey && region) {
-      console.log('Using AWS config and credentials explicitly passed');
+      authMethod = 'Using AWS config and credentials explicitly passed';
 
       AWS.config.update({
         accessKeyId,
@@ -25,7 +27,7 @@ export default class AWSWithConfig {
     } else if (configExists) {
       const customProf = profile === undefined ? 'default' : profile;
 
-      console.log(`Using ~/.aws/config and ~/.aws/credentials with the [${customProf}] profile`);
+      authMethod = `Using ~/.aws/config and ~/.aws/credentials with the [${customProf}] profile`;
 
       const credentials = new AWS.SharedIniFileCredentials({
         profile: customProf
@@ -37,7 +39,15 @@ export default class AWSWithConfig {
       });
     } else if (this.checkProcessEnv()) {
       // Don't need to do anything here, AWS.config will pick these up automatically
-      console.log('Using AWS config and credentials preset in environment variables');
+      authMethod = 'Using AWS config and credentials preset in environment variables';
+    }
+
+    if (AWS.config.credentials) {
+      // on EC2 and Lambda, the AWS SDK gets preprovisioned with temporary credentials
+      // matching the IAM role; we don't have to do anything at all :)
+      // (This will also trigger if we do auth via a method above)
+      authMethod = authMethod || 'Using AWS config provided by IAM instance roles';
+      console.log(authMethod);
     } else {
       throw new Error(
         'Could not find AWS config and/or credentials. See `vinz --help` ' +

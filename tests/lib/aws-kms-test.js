@@ -108,4 +108,28 @@ describe('aws-kms', () => {
       });
     });
   });
+
+  describe('decryptData', () => {
+    it("runs input data through KMS's decrypt method", () => {
+      expect(true).not.toBeTruthy();
+    });
+
+    it('raises any error from KMS itself', () => {
+      expect(true).not.toBeTruthy();
+    });
+  });
+
+  describe('retrieveAndDecrypt', () => {
+    it('calls decryptData after *both* getVinzKeyArn and readFromFile return', () => {
+      expect(true).not.toBeTruthy();
+    });
+
+    it('surfaces an error from getVinzKeyArn, readFromFile, or decryptData all in the same place', () => {
+      expect(true).not.toBeTruthy();
+    });
+
+    it('returns a promise that resolves with the decrypted data', () => {
+      expect(true).not.toBeTruthy();
+    });
+  });
 });

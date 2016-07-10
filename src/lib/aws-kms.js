@@ -1,5 +1,11 @@
-import { writeToFile } from './io';
-import { ENCRYPTION_CONTEXT } from '../constants';
+import {
+  readFromFile,
+  writeToFile
+} from './io';
+import {
+  ENCRYPTION_CONTEXT,
+  SECRET_DIR_NAME
+} from '../constants';
 
 const getVinzKeyArn = (kmsClient) => {
   return new Promise((resolve, reject) => {
@@ -45,14 +51,32 @@ const encryptAndStore = function(kmsClient, secretName, secretValue) {
     }).then((encryptedSecret) => {
       return writeToFile(secretName, encryptedSecret);
     }).then(() => {
-      console.log(`secrets/${secretName} encrypted and saved.`);
+      console.log(`./${SECRET_DIR_NAME}/${secretName} encrypted and saved.`);
     }).catch((err) => {
       console.error(err);
     });
 };
 
+const decryptData = (kmsClient, keyArn, buffer) => {
+  return buffer;
+};
+
+const retrieveAndDecrypt = function(kmsClient, secretName) {
+  const arnPromise = this.getVinzKeyArn(kmsClient);
+  const bufferPromise = readFromFile(secretName);
+
+  return Promise.all([arnPromise, bufferPromise]).then((resolvedValues) => {
+    const [keyArn, buffer] = resolvedValues;
+    return this.decryptData(kmsClient, keyArn, buffer);
+  }).catch((err) => {
+    console.error(err);
+  });
+};
+
 export default {
   getVinzKeyArn,
   encryptData,
-  encryptAndStore
+  encryptAndStore,
+  decryptData,
+  retrieveAndDecrypt
 };

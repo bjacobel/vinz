@@ -15,17 +15,17 @@ Vinz is the keymaster of your AWS Lambda applications. Storing secrets (keys and
 ###_Simple Usage_
 - Encrypt a secret using the Vinz bash CLI:
 
-        $> vinz --encrypt TwitterSecretKey
+        $> vinz --encrypt TwitterConsumerKey
         vinz: Enter the secret to encrypt as 'TwitterSecretKey'. (typing hidden):
-        secrets/TwitterSecretKey encrypted and saved.
+        secrets/TwitterConsumerKey encrypted and saved.
 
 - Decrypt a secret from node:
 
         const vinz = require('vinz');
-        if (!vinz.isAuthenticated) {
-          vinz.authenticate();
-        }
-        console.log(vinz.get('TwitterSecretKey'))
+        vinz = new Vinz();
+        vinz.get('TwitterSecretKey').then((TwitterSecretKey) => {
+            console.log(TwitterSecretKey);
+        });
 
 ###_Detailed Usage_
 

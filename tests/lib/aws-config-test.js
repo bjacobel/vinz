@@ -68,6 +68,22 @@ describe('aws-config', () => {
       configExpectations(aws);
     });
 
+    it('can be instantiated if creds are already set when we arrive on the scene (as on Lambda)', () => {
+      fs.statSync.mockImplementationOnce(() => { throw Error(); });
+      AWS.config.credentials = {
+        accessKeyId,
+        secretAccessKey,
+        region
+      };
+
+      const aws = new AWSWithConfig();
+
+      configExpectations(aws);
+      expect(console.log).lastCalledWith('Using AWS config provided by IAM instance roles');
+
+      delete AWS.config.credentials;
+    });
+
     it('throws an error if none of the above work', () => {
       fs.statSync.mockImplementationOnce(() => { throw Error(); });
       expect(() => new AWSWithConfig()).toThrow(new Error(

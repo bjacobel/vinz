@@ -40,4 +40,14 @@ describe('io', () => {
       expect(fs.mkdir).not.toBeCalled();
     });
   });
+
+  describe('readFromFile', () => {
+    it('retrieves the contents of the file at ./secrets/args[0]', () => {
+      expect(true).not.toBeTruthy();
+    });
+
+    it('handles errors gracefully', () => {
+      expect(true).not.toBeTruthy();
+    });
+  });
 });

@@ -8,11 +8,7 @@ jest.unmock('../src/cli');
 import CLI from '../src/cli';
 
 describe('CLI', () => {
-  let cli;
-
-  beforeEach(() => {
-    cli = new CLI();
-  });
+  const cli = new CLI();
 
   describe('parse', () => {
     it('starts up a Commander interface', () => {
