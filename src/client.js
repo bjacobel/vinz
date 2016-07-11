@@ -1,5 +1,5 @@
 import AWSWithConfig from './lib/aws-config';
-import { retrieveAndDecrypt } from './lib/aws-kms';
+import kms from './lib/aws-kms';
 
 export default class Vinz {
   constructor() {
@@ -9,7 +9,7 @@ export default class Vinz {
   get(...secretNames) {
     const promises = [];
     secretNames.forEach((secretName) => {
-      promises.push(retrieveAndDecrypt(this.kmsClient, secretName));
+      promises.push(kms.retrieveAndDecrypt(this.kmsClient, secretName));
     });
 
     return Promise.all(promises).then((allDecryptedSecrets) => {

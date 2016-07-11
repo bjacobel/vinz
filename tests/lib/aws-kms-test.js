@@ -4,7 +4,7 @@ import {
 } from '../../src/lib/io';
 
 jest.unmock('../../src/lib/aws-kms');
-import * as kms from '../../src/lib/aws-kms';
+import kms from '../../src/lib/aws-kms';
 
 describe('aws-kms', () => {
   let kmsClient;

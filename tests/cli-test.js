@@ -1,7 +1,7 @@
 import prompt from 'prompt';
 import commander from 'commander';
 import AWSWithConfig from '../src/lib/aws-config';
-import { encryptAndStore } from '../src/lib/aws-kms';
+import kms from '../src/lib/aws-kms';
 import { prepSecretDir } from '../src/lib/io';
 
 jest.unmock('../src/cli');
@@ -101,7 +101,7 @@ describe('CLI', () => {
 
     it('calls encryptAndStore after the prompt gets input', () => {
       cli.encryptByCLI({ encrypt: 'FooBar' });
-      expect(encryptAndStore).lastCalledWith(undefined, 'FooBar', 'secretValue');
+      expect(kms.encryptAndStore).lastCalledWith(undefined, 'FooBar', 'secretValue');
     });
 
     it('throws any error from prompt', () => {

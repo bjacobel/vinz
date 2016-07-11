@@ -85,7 +85,7 @@ const retrieveAndDecrypt = function(kmsClient, secretName) {
   });
 };
 
-export {
+export default {
   getVinzKeyArn,
   encryptData,
   encryptAndStore,

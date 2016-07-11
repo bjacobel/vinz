@@ -1,5 +1,5 @@
 import AWSWithConfig from '../src/lib/aws-config';
-import { retrieveAndDecrypt } from '../src/lib/aws-kms';
+import kms from '../src/lib/aws-kms';
 
 jest.unmock('../src/client.js');
 import Vinz from '../src/client';
@@ -31,18 +31,18 @@ describe('client', () => {
 
   describe('get', () => {
     beforeEach(() => {
-      retrieveAndDecrypt.mockImplementation(() => new Promise((resolve) => resolve()));
+      kms.retrieveAndDecrypt.mockImplementation(() => new Promise((resolve) => resolve()));
     });
 
     it('returns the decrypted value of a secret in the ./secret dir', () => {
-      retrieveAndDecrypt.mockImplementationOnce(() => new Promise((resolve) => resolve('foobar')));
+      kms.retrieveAndDecrypt.mockImplementationOnce(() => new Promise((resolve) => resolve('foobar')));
       return vinz.get('FooBar').then((FooBar) => {
         expect(FooBar).toEqual('foobar');
       });
     });
 
     it('returns the decrypted value of multiple secrets', () => {
-      retrieveAndDecrypt
+      kms.retrieveAndDecrypt
         .mockImplementationOnce(() => new Promise((resolve) => resolve('foo')))
         .mockImplementationOnce(() => new Promise((resolve) => resolve('bar')))
         .mockImplementationOnce(() => new Promise((resolve) => resolve('foobar')));
