@@ -5,7 +5,7 @@
 ![keymaster](https://gifs.bjacobel.com/keymaster.gif)
 
 > _I am the Keymaster!_
-
+>
 >-- Vinz Clortho, _Ghostbusters_ (1984)
 
 
@@ -15,17 +15,21 @@ Vinz is the keymaster of your AWS Lambda applications. Storing secrets (keys and
 ###_Simple Usage_
 - Encrypt a secret using the Vinz bash CLI:
 
-        $> vinz --encrypt TwitterConsumerKey
-        vinz: Enter the secret to encrypt as 'TwitterSecretKey'. (typing hidden):
-        secrets/TwitterConsumerKey encrypted and saved.
+    ```bash
+    $> vinz --encrypt TwitterConsumerKey
+    vinz: Enter the secret to encrypt as 'TwitterSecretKey'. (typing hidden):
+    secrets/TwitterConsumerKey encrypted and saved.
+    ```
 
 - Decrypt a secret from node:
 
-        const vinz = require('vinz');
-        vinz = new Vinz();
-        vinz.get('TwitterSecretKey').then((TwitterSecretKey) => {
-            console.log(TwitterSecretKey);
-        });
+    ```javascript
+    import Vinz from 'vinz';
+    vinz = new Vinz();
+    vinz.get('TwitterSecretKey').then((TwitterSecretKey) => {
+        console.log(TwitterSecretKey);
+    });
+    ```
 
 ###_Detailed Usage_
 
@@ -52,19 +56,21 @@ This one's easy: just `npm install --save vinz`.
 
 When it installed itself, Vinz created a CLI for you. Check out its helptext:
 
-    $> node_modules/.bin/vinz --help
+```bash
+$> node_modules/.bin/vinz --help
 
-      Usage: vinz [options]
+  Usage: vinz [options]
 
-      Options:
+  Options:
 
-        -h, --help                                 output usage information
-        -V, --version                              output the version number
-        -p, --profile <profile>                    Specify a ~/.aws/credentials profile to use
-        -a, --access-key-id <accessKeyId>          Override AWS access key found in env or in ~/.aws
-        -s, --secret-access-key <secretAccessKey>  Override AWS secret key found in env or in ~/.aws
-        -r, --region <region>                      Override AWS region found in env or in ~/.aws
-        -e, --encrypt <secretName>                 Store an encrypted secret in ./secrets/secretName
+    -h, --help                                 output usage information
+    -V, --version                              output the version number
+    -p, --profile <profile>                    Specify a ~/.aws/credentials profile to use
+    -a, --access-key-id <accessKeyId>          Override AWS access key found in env or in ~/.aws
+    -s, --secret-access-key <secretAccessKey>  Override AWS secret key found in env or in ~/.aws
+    -r, --region <region>                      Override AWS region found in env or in ~/.aws
+    -e, --encrypt <secretName>                 Store an encrypted secret in ./secrets/secretName
+```
 
 `--encrypt` is the star here - it's the interface you'll use for storing your secrets. First, though, Vinz needs to know about your AWS account.
 
@@ -81,11 +87,15 @@ Note that Vinz doesn't currently support mixing and matching these options - i.e
 
 Once you've got your credentials ready to go, you can encrypt your first secret. Pass the `--encrypt` option to Vinz with the name you'd like your secret to be available in your application as. For example:
 
-	node_modules/.bin/vinz --encrypt TwitterConsumerKey
+```bash
+node_modules/.bin/vinz --encrypt TwitterConsumerKey
+```
 
 Vinz will now ask you to enter the value you'd like to encrypt. Typing will be hidden.
 
-	vinz: Enter the secret to encrypt as 'TwitterConsumerKey'. (typing hidden):
+```
+vinz: Enter the secret to encrypt as 'TwitterConsumerKey'. (typing hidden):
+```
 
 Type your secret, press enter, and Vinz will encrypt your secret using AWS KMS and save it at `./secrets/TwitterConsumerKey`. Commit your encrypted secret file to Git and/or include it in your Lambda deployment bundle, and you're ready to start using it in a Node application.
 
