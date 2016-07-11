@@ -48,7 +48,6 @@ describe('io', () => {
       return io.readFromFile('FooBar').then((data) => {
         expect(fs.readFile).lastCalledWith(
           `./${SECRET_DIR_NAME}/FooBar`,
-          { encoding: 'utf-8' },
           jasmine.any(Function)
         );
         expect(data).toEqual('FooBarEncrypted');
@@ -56,14 +55,13 @@ describe('io', () => {
     });
 
     it('handles errors gracefully', () => {
-      fs.readFile.mockImplementationOnce((file, opts, cb) => {
+      fs.readFile.mockImplementationOnce((file, cb) => {
         cb('error from readFile');
       });
 
       return io.readFromFile('FooBar').catch((err) => {
         expect(fs.readFile).lastCalledWith(
           `./${SECRET_DIR_NAME}/FooBar`,
-          { encoding: 'utf-8' },
           jasmine.any(Function)
         );
         expect(err).toEqual('error from readFile');

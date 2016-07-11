@@ -36,7 +36,7 @@ describe('aws-kms', () => {
         });
       }),
       decrypt: jest.fn((opts, callback) => {
-        callback(null, 'bufferedData');
+        callback(null, { Plaintext: 'bufferedData' });
       })
     };
   });

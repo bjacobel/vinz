@@ -5,7 +5,7 @@ export default {
     callback();
   }),
   readFileSync: jest.fn(),
-  readFile: jest.fn((file, opts, cb) => {
+  readFile: jest.fn((file, cb) => {
     cb(null, 'FooBarEncrypted');
   })
 };

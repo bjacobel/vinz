@@ -27,7 +27,7 @@ export const prepSecretDir = () => {
 
 export const readFromFile = (secretName) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(`./${SECRET_DIR_NAME}/${secretName}`, { encoding: 'utf-8' }, (err, data) => {
+    fs.readFile(`./${SECRET_DIR_NAME}/${secretName}`, (err, data) => {
       if (err) {
         reject(err);
       } else {

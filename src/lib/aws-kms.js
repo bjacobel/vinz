@@ -47,8 +47,7 @@ const encryptData = (kmsClient, keyArn, secretValue) => {
 const decryptData = (kmsClient, keyArn, buffer) => {
   return new Promise((resolve, reject) => {
     kmsClient.decrypt({
-      KeyId: keyArn,
-      Ciphertext: buffer,
+      CiphertextBlob: buffer,
       EncryptionContext: ENCRYPTION_CONTEXT
     }, (err, data) => {
       if (err) {
@@ -57,6 +56,8 @@ const decryptData = (kmsClient, keyArn, buffer) => {
         resolve(data);
       }
     });
+  }).then((data) => {
+    return data.Plaintext.toString('utf8');
   });
 };
 
