@@ -81,11 +81,11 @@ const retrieveAndDecrypt = function(kmsClient, secretName) {
     const [keyArn, buffer] = resolvedValues;
     return this.decryptData(kmsClient, keyArn, buffer);
   }).catch((err) => {
-    console.error(err);
+    return console.error(err);
   });
 };
 
-export default {
+export {
   getVinzKeyArn,
   encryptData,
   encryptAndStore,

@@ -111,16 +111,16 @@ const vinz = new Vinz();
 
 Behind the scenes, Vinz will configure itself to use your AWS credentials; unlike on the command line, though, you don't have to do any configuration for this yourself, as Lambdas are created with IAM credentials ready.
 
-Now, try getting a secret out of Vinz. `vinz.get` and `vinz.getAll` are the interfaces you'll use; the first for retrieving a single secret and the second for retrieving multiple. Both return promises, and are demonstrated in examples below.
+Now, try getting a secret out of Vinz. `vinz.get` is the interfaces you'll use; it can be used for retrieving one or many secrets. `vinz.get` returns a `Promise`, and is demonstrated in examples below.
 
 ```javascript
 vinz.get('TwitterConsumerKey').then((TwitterConsumerKey) => {
-    console.log(TwitterConsumerKey);
+  console.log(TwitterConsumerKey);
 });
 
-vinz.getAll(['TwitterConsumerKey', 'TwitterSecretKey']).then((secrets) => {
-    const [TwitterConsumerKey, TwitterSecretKey] = secrets;
-    console.log(TwitterConsumerKey, TwitterSecretKey)
+vinz.get('TwitterConsumerKey', 'TwitterSecretKey').then((secrets) => {
+  const [TwitterConsumerKey, TwitterSecretKey] = secrets;
+  console.log(TwitterConsumerKey, TwitterSecretKey)
 });
 ```
 

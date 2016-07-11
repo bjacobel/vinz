@@ -1,7 +1,10 @@
-import { writeToFile } from '../../src/lib/io';
+import {
+  readFromFile,
+  writeToFile
+} from '../../src/lib/io';
 
 jest.unmock('../../src/lib/aws-kms');
-import kms from '../../src/lib/aws-kms';
+import * as kms from '../../src/lib/aws-kms';
 
 describe('aws-kms', () => {
   let kmsClient;
@@ -33,7 +36,7 @@ describe('aws-kms', () => {
         });
       }),
       decrypt: jest.fn((opts, callback) => {
-        callback(null, opts.Ciphertext.substring(0, opts.Ciphertext.length - 9));
+        callback(null, 'bufferedData');
       })
     };
   });
@@ -114,6 +117,7 @@ describe('aws-kms', () => {
         });
       });
       console.log = jest.fn();
+      console.error = jest.fn();
     });
 
     it('calls encryptData after getVinzKeyArn returns', () => {
@@ -127,19 +131,72 @@ describe('aws-kms', () => {
         expect(writeToFile).lastCalledWith('superSecretApiKey', 'fake encrypted data');
       });
     });
+
+    it('writes an error to console if something bad happens', () => {
+      kms.encryptData.mockImplementationOnce(() => new Promise((resolve, reject) => reject('eD err')));
+      return kms.encryptAndStore(kmsClient, 'superSecretApiKey', 'asdf1234').catch(() => {
+        expect(console.error).toBeCalledWith('eD err');
+      });
+    });
   });
 
   describe('retrieveAndDecrypt', () => {
+    beforeEach(() => {
+      kms.getVinzKeyArn = jest.fn(() => new Promise((resolve) => resolve()));
+      readFromFile.mockImplementation(() => new Promise((resolve) => resolve()));
+      kms.decryptData = jest.fn();
+      console.error = jest.fn();
+    });
+
     it('calls decryptData after *both* getVinzKeyArn and readFromFile return', () => {
-      expect(true).not.toBeTruthy();
+      const rejectPromise = () => new Promise((resolve, reject) => reject());
+
+      kms.getVinzKeyArn.mockImplementationOnce(rejectPromise);
+      readFromFile.mockImplementationOnce(rejectPromise);
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').catch(() => {
+        expect(kms.decryptData).not.toBeCalled();
+        expect(console.error).toBeCalled();
+      });
+
+      readFromFile.mockImplementationOnce(rejectPromise);
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').catch(() => {
+        expect(kms.decryptData).not.toBeCalled();
+        expect(console.error).toBeCalled();
+      });
+
+      kms.getVinzKeyArn.mockImplementationOnce(rejectPromise);
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').catch(() => {
+        expect(kms.decryptData).not.toBeCalled();
+        expect(console.error).toBeCalled();
+      });
+
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').then(() => {
+        expect(kms.decryptData).toBeCalled();
+      });
     });
 
     it('surfaces an error from getVinzKeyArn, readFromFile, or decryptData all in the same place', () => {
-      expect(true).not.toBeTruthy();
+      kms.getVinzKeyArn.mockImplementationOnce(() => new Promise((resolve, reject) => reject('getVinzKeyArn err')));
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').catch(() => {
+        expect(console.error).lastCalledWith('getVinzKeyArn err');
+      });
+
+      readFromFile.mockImplementationOnce(() => new Promise((resolve, reject) => reject('readFromFile err')));
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').catch(() => {
+        expect(console.error).lastCalledWith('readFromFile err');
+      });
+
+      kms.decryptData.mockImplementationOnce(() => new Promise((resolve, reject) => reject('decryptData err')));
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').catch(() => {
+        expect(console.error).lastCalledWith('decryptData err');
+      });
     });
 
     it('returns a promise that resolves with the decrypted data', () => {
-      expect(true).not.toBeTruthy();
+      kms.decryptData.mockImplementationOnce(() => new Promise((resolve) => resolve('decrypted')));
+      kms.retrieveAndDecrypt(kmsClient, 'FooBar').then((data) => {
+        expect(data).toEqual('decrypted');
+      });
     });
   });
 });
