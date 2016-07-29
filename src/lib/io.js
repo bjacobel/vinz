@@ -3,8 +3,9 @@ import path from 'path';
 import { SECRET_DIR_NAME } from '../constants';
 
 export const writeToFile = (fileName, encryptedData) => {
+  const secretPath = path.join(process.cwd(), SECRET_DIR_NAME, fileName);
   return new Promise((resolve, reject) => {
-    fs.writeFile(`./${SECRET_DIR_NAME}/${fileName}`, encryptedData, (err) => {
+    fs.writeFile(path, encryptedData, (err) => {
       if (err) {
         reject(err);
       } else {
@@ -12,7 +13,7 @@ export const writeToFile = (fileName, encryptedData) => {
       }
     });
   }).catch((err) => {
-    throw new Error(`Error writing to ./${SECRET_DIR_NAME}/${fileName}. Details: \n\n${err}`);
+    throw new Error(`Error writing to ${secretPath}. Details: \n\n${err}`);
   });
 };
 
@@ -27,7 +28,7 @@ export const prepSecretDir = () => {
 
 export const readFromFile = (secretName) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(`./${SECRET_DIR_NAME}/${secretName}`, (err, data) => {
+    fs.readFile(path.join(process.cwd(), SECRET_DIR_NAME, secretName), (err, data) => {
       if (err) {
         reject(err);
       } else {

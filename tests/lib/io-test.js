@@ -15,13 +15,14 @@ describe('io', () => {
     });
 
     it('handles errors gracefully', () => {
+      process.cwd = jest.fn(() => '/path');
       fs.writeFile.mockImplementationOnce((file, data, callback) => {
         callback('borken');
       });
       console.error = jest.fn();
 
       return io.writeToFile('FooBar', 'bar').catch((err) => {
-        expect(err).toMatch('Error writing to ./secrets/FooBar');
+        expect(err).toMatch('Error writing to /path/secrets/FooBar');
       });
     });
   });
@@ -45,9 +46,10 @@ describe('io', () => {
 
   describe('readFromFile', () => {
     it('retrieves the contents of the file at ./secrets/args[0]', () => {
+      process.cwd = jest.fn(() => '/path');
       return io.readFromFile('FooBar').then((data) => {
         expect(fs.readFile).lastCalledWith(
-          `./${SECRET_DIR_NAME}/FooBar`,
+          `/path/${SECRET_DIR_NAME}/FooBar`,
           jasmine.any(Function)
         );
         expect(data).toEqual('FooBarEncrypted');
@@ -60,8 +62,9 @@ describe('io', () => {
       });
 
       return io.readFromFile('FooBar').catch((err) => {
+        process.cwd = jest.fn(() => '/path');
         expect(fs.readFile).lastCalledWith(
-          `./${SECRET_DIR_NAME}/FooBar`,
+          `/path/${SECRET_DIR_NAME}/FooBar`,
           jasmine.any(Function)
         );
         expect(err).toEqual('error from readFile');

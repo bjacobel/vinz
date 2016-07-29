@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk-umd';
+import AWS from 'aws-sdk';
 import path from 'path';
 import fs from 'fs';
 import ini from 'ini';
@@ -38,15 +38,15 @@ export default class AWSWithConfig {
         region: this.getRegion(customProf)
       });
     } else if (this.checkProcessEnv()) {
-      // Don't need to do anything here, AWS.config will pick these up automatically
+      // in production environments we set credentials using env vars, but region is not set
+      // so we must set the region if it's passed and we determine we're using env vars for auth method
+      if (region) {
+        AWS.config.update({ region });
+      }
       authMethod = 'Using AWS config and credentials preset in environment variables';
     }
 
-    if (AWS.config.credentials) {
-      // on EC2 and Lambda, the AWS SDK gets preprovisioned with temporary credentials
-      // matching the IAM role; we don't have to do anything at all :)
-      // (This will also trigger if we do auth via a method above)
-      authMethod = authMethod || 'Using AWS config provided by IAM instance roles';
+    if (authMethod) {
       console.log(authMethod);
     } else {
       throw new Error(
@@ -70,7 +70,7 @@ export default class AWSWithConfig {
   }
 
   checkProcessEnv() {
-    return process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_DEFAULT_REGION;
+    return process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY;
   }
 
   getRegion(profile) {

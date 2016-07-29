@@ -2,8 +2,8 @@ import AWSWithConfig from './lib/aws-config';
 import kms from './lib/aws-kms';
 
 export default class Vinz {
-  constructor() {
-    this.kmsClient = new AWSWithConfig().KMS;
+  constructor(region) {
+    this.kmsClient = new AWSWithConfig(null, null, region).KMS;
   }
 
   get(...secretNames) {

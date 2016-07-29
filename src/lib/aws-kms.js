@@ -7,23 +7,30 @@ import {
   SECRET_DIR_NAME
 } from '../constants';
 
-const getVinzKeyArn = (kmsClient) => {
-  return new Promise((resolve, reject) => {
-    kmsClient.listAliases({}, (err, data) => {
-      if (err) {
-        reject(err);
+const getVinzKeyArn = function(kmsClient) {
+  if (this.vinzKeyArn) {
+    return new Promise((resolve) => {
+      resolve(this.vinzKeyArn);
+    });
+  } else {
+    return new Promise((resolve, reject) => {
+      kmsClient.listAliases({}, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    }).then((data) => {
+      const vinzKey = data.Aliases.filter(x => x.AliasName === 'alias/vinz');
+      if (vinzKey.length === 0) {
+        throw new Error('No KMS key named "vinz". For more info on setup. see the readme.');
       } else {
-        resolve(data);
+        this.vinzKeyArn = vinzKey[0].AliasArn;
+        return this.vinzKeyArn;
       }
     });
-  }).then((data) => {
-    const vinzKey = data.Aliases.filter(x => x.AliasName === 'alias/vinz');
-    if (vinzKey.length === 0) {
-      throw new Error('No KMS key named "vinz". For more info on setup. see the readme.');
-    } else {
-      return vinzKey[0].AliasArn;
-    }
-  });
+  }
 };
 
 const encryptData = (kmsClient, keyArn, secretValue) => {

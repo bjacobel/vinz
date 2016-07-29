@@ -101,6 +101,12 @@ Type your secret, press enter, and Vinz will encrypt your secret using AWS KMS a
 
 #### 4. Use your secrets in Node
 
+While you're developing an application that uses Vinz on your local machine, the Vinz JS client will need your credentials to access AWS, However, in production code (running on AWS Lambda) you don't have to do any configuration for this yourself, as Lambdas are created with AWS credentials preset in the environment. For this reason, it's recommended to use AWS credential environment variables while developing locally, as this way you can share the same code between development and production.
+
+```
+AWS_ACCESS_KEY_ID=AKAAAAAAAAAAAA AWS_SECRET_ACCESS_KEY=1AAAA+AAAA/AAAAA AWS_DEFAULT_REGION=us-east-1 node app.js
+```
+
 To use Vinz in a Lambda application, import it like so:
 
 ```javascript
@@ -113,13 +119,11 @@ If you're not using Babel for ES6 modules, use the CJS syntax:
 const Vinz = require('vinz');
 ```
 
-The following steps are the same regardless of your environment: instantiate a Vinz object.
+The following steps are the same regardless of your environment: instantiate a Vinz object. Note that while Lambda environments already know your AWS access and secret keys, they don't know your region, so you must pass one in.
 
 ```javascript
-const vinz = new Vinz();
+const vinz = new Vinz('us-east-1');
 ```
-
-Behind the scenes, Vinz will configure itself to use your AWS credentials; unlike on the command line, though, you don't have to do any configuration for this yourself, as Lambdas are created with IAM credentials ready.
 
 Now, try getting a secret out of Vinz. `vinz.get` is the interfaces you'll use; it can be used for retrieving one or many secrets. `vinz.get` returns a `Promise`, and is demonstrated in examples below.
 

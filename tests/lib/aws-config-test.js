@@ -1,6 +1,6 @@
 jest.mock('fs');
 import fs from 'fs';
-import AWS from 'aws-sdk-umd';
+import AWS from 'aws-sdk';
 import ini from 'ini';
 
 jest.unmock('../../src/lib/aws-config');
@@ -68,20 +68,15 @@ describe('aws-config', () => {
       configExpectations(aws);
     });
 
-    it('can be instantiated if creds are already set when we arrive on the scene (as on Lambda)', () => {
+    it('can use env vars for creds but pass in the region itself (as it will on Lambda)', () => {
       fs.statSync.mockImplementationOnce(() => { throw Error(); });
-      AWS.config.credentials = {
-        accessKeyId,
-        secretAccessKey,
-        region
-      };
-
-      const aws = new AWSWithConfig();
-
+      Object.assign(process.env, {
+        AWS_ACCESS_KEY_ID: accessKeyId,
+        AWS_SECRET_ACCESS_KEY: secretAccessKey
+      });
+      const aws = new AWSWithConfig(null, null, 'us-east-1');
+      expect(console.log).lastCalledWith('Using AWS config and credentials preset in environment variables');
       configExpectations(aws);
-      expect(console.log).lastCalledWith('Using AWS config provided by IAM instance roles');
-
-      delete AWS.config.credentials;
     });
 
     it('throws an error if none of the above work', () => {
