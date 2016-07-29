@@ -1,6 +1,6 @@
 jest.mock('fs');
 import fs from 'fs';
-import AWS from 'aws-sdk';
+import AWS from 'aws-sdk-umd';
 import ini from 'ini';
 
 jest.unmock('../../src/lib/aws-config');

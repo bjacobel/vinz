@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import AWS from 'aws-sdk-umd';
 import path from 'path';
 import fs from 'fs';
 import ini from 'ini';
