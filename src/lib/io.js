@@ -5,7 +5,7 @@ import { SECRET_DIR_NAME } from '../constants';
 export const writeToFile = (fileName, encryptedData) => {
   const secretPath = path.join(process.cwd(), SECRET_DIR_NAME, fileName);
   return new Promise((resolve, reject) => {
-    fs.writeFile(path, encryptedData, (err) => {
+    fs.writeFile(secretPath, encryptedData, (err) => {
       if (err) {
         reject(err);
       } else {
