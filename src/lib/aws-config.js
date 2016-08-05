@@ -76,6 +76,10 @@ export default class AWSWithConfig {
   getRegion(profile) {
     const file = fs.readFileSync(path.join(process.env.HOME, '.aws/config'), 'utf-8');
     const parsedIni = ini.parse(file);
-    return parsedIni[profile].region;
+    if (profile === 'default') {
+      return parsedIni[profile].region;
+    } else {
+      return parsedIni[`profile ${profile}`].region;
+    }
   }
 }
