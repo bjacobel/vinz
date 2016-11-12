@@ -5,14 +5,15 @@ node_js:
 cache:
   directories:
   - node_modules
+before_install:
+  - npm install -g yarn
 install:
-  - npm link
-  - npm install
+  - yarn
 script:
-  - npm run lint
-  - npm run test
-after_script:
-  - npm run coveralls
+  - yarn run lint
+  - yarn run test
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: npm
   email: bjacobel@gmail.com
