@@ -1,6 +1,6 @@
 {
   "name": "vinz",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Enables secure storage of credentials right in your repo using AWS KMS.",
   "main": "dist/client.js",
   "scripts": {
