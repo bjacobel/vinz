@@ -1,4 +1,4 @@
-#Vinz
+# Vinz
 
 [![Build Status](https://travis-ci.org/bjacobel/vinz.svg?branch=master)](https://travis-ci.org/bjacobel/vinz) [![Coverage Status](https://coveralls.io/repos/github/bjacobel/vinz/badge.svg)](https://coveralls.io/github/bjacobel/vinz) [![npm](https://img.shields.io/npm/v/vinz.svg?maxAge=2592000)](https://npmjs.com/package/vinz)
 
@@ -9,10 +9,10 @@
 >-- Vinz Clortho, _Ghostbusters_ (1984)
 
 
-###_Motivation_
+### _Motivation_
 Vinz is the keymaster of your AWS Lambda applications. Storing secrets (keys and configuration) in Lambda is difficult out of the box because Lambda has no persistent file system and no notion of environment variables. Vinz aims to make the secret storage and usage process easy for Lambda functions - by storing your secrets encrypted and versioned right alongside your application in its deployment bundle, and providing a simple API for secret decryption and access.
 
-###_Simple Usage_
+### _Simple Usage_
 - Encrypt a secret using the Vinz bash CLI:
 
     ```bash
@@ -31,7 +31,7 @@ Vinz is the keymaster of your AWS Lambda applications. Storing secrets (keys and
     });
     ```
 
-###_Detailed Usage_
+### _Detailed Usage_
 
 #### 1. Set up KMS with a root key
 In the AWS console, open up "Identity and Access Management" and click on "Encryption Keys," then click on "Create Key" to set up the root Vinz key.
@@ -140,8 +140,8 @@ vinz.get('TwitterConsumerKey', 'TwitterSecretKey').then((secrets) => {
 
 That's all there is to using Vinz.
 
-###_Contributing_
+### _Contributing_
 Vinz welcomes pull requests! Please provide appropriate test coverage for new features and mention `@bjacobel` on your PR.
 
-###_License_
+### _License_
 MIT
